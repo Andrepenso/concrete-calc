@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparação de Custo de Concreto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <h2 class="text-center">Comparação de Custo de Concreto</h2>
+    <form method="POST" class="mt-4">
+        <label class="form-label">Areia (R$):</label>
+        <input type="number" step="0.01" name="areia" class="form-control" required>
+
+        <label class="form-label">Água (R$):</label>
+        <input type="number" step="0.01" name="agua" class="form-control" required>
+
+        <label class="form-label">Cimento (R$):</label>
+        <input type="number" step="0.01" name="cimento" class="form-control" required>
+
+        <label class="form-label">Brita (R$):</label>
+        <input type="number" step="0.01" name="brita" class="form-control" required>
+
+        <label class="form-label">Concreto Usinado (R$):</label>
+        <input type="number" step="0.01" name="concreto_usinado" class="form-control" required>
+
+        <button type="submit" class="btn btn-primary mt-3 w-100">Calcular</button>
+    </form>
+
+    {% if custo_material is not none %}
+        <h3 class="mt-4">Resultados</h3>
+        <p>Custo dos Materiais: <strong>R$ {{ custo_material }}</strong></p>
+        <p>Custo do Concreto Usinado: <strong>R$ {{ concreto_usinado }}</strong></p>
+        <p>Diferença: <strong>R$ {{ diferenca }}</strong></p>
+    {% endif %}
+</body>
+</html>
