@@ -4,27 +4,53 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    # Inicializa os valores padrão
+    valores = {
+        "areia": 0.0, "agua": 0.0, "cimento": 0.0, 
+        "brita": 0.0, "aditivo": 0.0, "concreto_usinado": 0.0
+    }
     custo_material = None
-    concreto_usinado = None
     diferenca = None
-    valores = {"areia": "", "agua": "", "cimento": "", "brita": "", "concreto_usinado": ""}
+    mais_caro = None
+    erro = None
 
     if request.method == "POST":
         try:
-            valores["areia"] = request.form["areia"]
-            valores["agua"] = request.form["agua"]
-            valores["cimento"] = request.form["cimento"]
-            valores["brita"] = request.form["brita"]
-            valores["concreto_usinado"] = request.form["concreto_usinado"]
+            # Obtém os valores do formulário e converte para float
+            valores["areia"] = float(request.form["areia"])
+            valores["agua"] = float(request.form["agua"])
+            valores["cimento"] = float(request.form["cimento"])
+            valores["brita"] = float(request.form["brita"])
+            valores["aditivo"] = float(request.form["aditivo"])
+            valores["concreto_usinado"] = float(request.form["concreto_usinado"])
 
-            custo_material = sum(float(valores[k]) for k in valores if k != "concreto_usinado")
-            concreto_usinado = float(valores["concreto_usinado"])
-            diferenca = concreto_usinado - custo_material
+            # Traço padrão para 1m³ de concreto (1:2:3)
+            tracado = {
+                "cimento": 7,  # sacos por m³
+                "areia": 0.6,  # m³
+                "brita": 0.8,  # m³
+                "agua": 180,   # litros
+                "aditivo": 2   # litros
+            }
+
+            # Calcula o custo total dos materiais para 1m³ de concreto
+            custo_material = (
+                (tracado["cimento"] * valores["cimento"]) +
+                (tracado["areia"] * valores["areia"]) +
+                (tracado["brita"] * valores["brita"]) +
+                (tracado["agua"] * valores["agua"]) +
+                (tracado["aditivo"] * valores["aditivo"])
+            )
+
+            # Calcula a diferença entre concreto usinado e feito na obra
+            diferenca = valores["concreto_usinado"] - custo_material
+            mais_caro = diferenca > 0  # Verdadeiro se o usinado for mais caro
+            diferenca = abs(diferenca)  # Calcula o valor absoluto no Python
 
         except ValueError:
-            return render_template("index.html", erro="Por favor, insira valores numéricos válidos.", valores=valores)
+            erro = "Por favor, insira valores numéricos válidos."
 
-    return render_template("index.html", custo_material=custo_material, concreto_usinado=concreto_usinado, diferenca=diferenca, valores=valores)
+    return render_template("index.html", valores=valores, custo_material=custo_material, diferenca=diferenca, mais_caro=mais_caro, erro=erro)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)

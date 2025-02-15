@@ -14,33 +14,68 @@
     {% endif %}
     
     <form method="POST" class="mt-4">
-        <label class="form-label">Areia (R$):</label>
+        <label class="form-label">Areia (R$/m³):</label>
         <input type="number" step="0.01" name="areia" class="form-control" required value="{{ valores['areia'] }}">
 
-        <label class="form-label">Água (R$):</label>
+        <label class="form-label">Água (R$/litro):</label>
         <input type="number" step="0.01" name="agua" class="form-control" required value="{{ valores['agua'] }}">
 
-        <label class="form-label">Cimento (R$):</label>
+        <label class="form-label">Cimento (R$/saco):</label>
         <input type="number" step="0.01" name="cimento" class="form-control" required value="{{ valores['cimento'] }}">
 
-        <label class="form-label">Brita (R$):</label>
+        <label class="form-label">Brita (R$/m³):</label>
         <input type="number" step="0.01" name="brita" class="form-control" required value="{{ valores['brita'] }}">
 
-        <label class="form-label">Concreto Usinado (R$):</label>
+        <label class="form-label">Aditivo (R$/litro):</label>
+        <input type="number" step="0.01" name="aditivo" class="form-control" required value="{{ valores['aditivo'] if 'aditivo' in valores else '' }}">
+
+        <label class="form-label">Concreto Usinado (R$/m³):</label>
         <input type="number" step="0.01" name="concreto_usinado" class="form-control" required value="{{ valores['concreto_usinado'] }}">
 
         <button type="submit" class="btn btn-primary mt-3 w-100">Calcular</button>
     </form>
 
     {% if custo_material is not none %}
-        <h3 class="mt-4">Resultados</h3>
-        <p>Areia: <strong>R$ {{ valores['areia'] }}</strong></p>
-        <p>Água: <strong>R$ {{ valores['agua'] }}</strong></p>
-        <p>Cimento: <strong>R$ {{ valores['cimento'] }}</strong></p>
-        <p>Brita: <strong>R$ {{ valores['brita'] }}</strong></p>
-        <p>Concreto Usinado: <strong>R$ {{ valores['concreto_usinado'] }}</strong></p>
-        <p>Custo dos Materiais: <strong>R$ {{ custo_material }}</strong></p>
-        <p>Diferença: <strong>R$ {{ diferenca }}</strong></p>
-    {% endif %}
+    <h3 class="mt-4 text-center">📊 Resultados do Cálculo</h3>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped mt-3 text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Material</th>
+                    <th>Valor Unitário (R$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Areia</td> <td>R$ {{ "%.2f"|format(valores.get('areia', 0.0)) }}</td></tr>
+                <tr><td>Água</td> <td>R$ {{ "%.2f"|format(valores.get('agua', 0.0)) }}</td></tr>
+                <tr><td>Cimento</td> <td>R$ {{ "%.2f"|format(valores.get('cimento', 0.0)) }}</td></tr>
+                <tr><td>Brita</td> <td>R$ {{ "%.2f"|format(valores.get('brita', 0.0)) }}</td></tr>
+                <tr><td>Aditivo</td> <td>R$ {{ "%.2f"|format(valores.get('aditivo', 0.0)) }}</td></tr>
+                <tr><td>Concreto Usinado</td> <td>R$ {{ "%.2f"|format(valores.get('concreto_usinado', 0.0)) }}</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="alert alert-info text-center mt-4">
+        <h4 class="fw-bold">💰 Custo dos Materiais para 1m³</h4>
+        <h3 class="text-primary fw-bold">R$ {{ "%.2f"|format(custo_material) }}</h3>
+    </div>
+
+    <div class="alert {% if mais_caro %}alert-success{% else %}alert-danger{% endif %} text-center mt-3">
+        <h5 class="fw-bold">⚖️ Diferença entre Concreto Usinado e Feito na Obra</h5>
+        <h4 class="fw-bold">
+            {% if mais_caro %}
+                ✅ Produzir o concreto na obra é mais vantajoso! <br>
+                💰 Você economiza: <strong>R$ {{ "%.2f"|format(diferenca) }}</strong> por m³.
+            {% else %}
+                ✅ Comprar concreto usinado é mais vantajoso! <br>
+                💰 Você economiza: <strong>R$ {{ "%.2f"|format(diferenca) }}</strong> por m³.
+            {% endif %}
+        </h4>
+    </div>
+    
+{% endif %}
+
 </body>
 </html>
