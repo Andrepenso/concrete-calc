@@ -8,29 +8,38 @@
 </head>
 <body class="container mt-5">
     <h2 class="text-center">Comparação de Custo de Concreto</h2>
+    
+    {% if erro %}
+        <div class="alert alert-danger">{{ erro }}</div>
+    {% endif %}
+    
     <form method="POST" class="mt-4">
         <label class="form-label">Areia (R$):</label>
-        <input type="number" step="0.01" name="areia" class="form-control" required>
+        <input type="number" step="0.01" name="areia" class="form-control" required value="{{ valores['areia'] }}">
 
         <label class="form-label">Água (R$):</label>
-        <input type="number" step="0.01" name="agua" class="form-control" required>
+        <input type="number" step="0.01" name="agua" class="form-control" required value="{{ valores['agua'] }}">
 
         <label class="form-label">Cimento (R$):</label>
-        <input type="number" step="0.01" name="cimento" class="form-control" required>
+        <input type="number" step="0.01" name="cimento" class="form-control" required value="{{ valores['cimento'] }}">
 
         <label class="form-label">Brita (R$):</label>
-        <input type="number" step="0.01" name="brita" class="form-control" required>
+        <input type="number" step="0.01" name="brita" class="form-control" required value="{{ valores['brita'] }}">
 
         <label class="form-label">Concreto Usinado (R$):</label>
-        <input type="number" step="0.01" name="concreto_usinado" class="form-control" required>
+        <input type="number" step="0.01" name="concreto_usinado" class="form-control" required value="{{ valores['concreto_usinado'] }}">
 
         <button type="submit" class="btn btn-primary mt-3 w-100">Calcular</button>
     </form>
 
     {% if custo_material is not none %}
         <h3 class="mt-4">Resultados</h3>
+        <p>Areia: <strong>R$ {{ valores['areia'] }}</strong></p>
+        <p>Água: <strong>R$ {{ valores['agua'] }}</strong></p>
+        <p>Cimento: <strong>R$ {{ valores['cimento'] }}</strong></p>
+        <p>Brita: <strong>R$ {{ valores['brita'] }}</strong></p>
+        <p>Concreto Usinado: <strong>R$ {{ valores['concreto_usinado'] }}</strong></p>
         <p>Custo dos Materiais: <strong>R$ {{ custo_material }}</strong></p>
-        <p>Custo do Concreto Usinado: <strong>R$ {{ concreto_usinado }}</strong></p>
         <p>Diferença: <strong>R$ {{ diferenca }}</strong></p>
     {% endif %}
 </body>
